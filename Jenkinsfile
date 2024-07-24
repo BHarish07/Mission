@@ -81,7 +81,7 @@ pipeline{
                 script{
                     withDockerRegistry(credentialsId: 'docker-auth', toolName: 'docker') {
                          sh "docker push harishbalike/mission:latest "
-                         sh "docker run -d --name mission -p 8081:8080 harishbalike/mission:latest"
+                         sh "docker run -d --name mission -p 8083:8080 harishbalike/mission:latest"
                          
                      }
                     
@@ -93,6 +93,16 @@ pipeline{
             steps{
                 withKubeConfig(caCertificate: '', clusterName: 'demo-cluster', contextName: '', credentialsId: 'k8s-token', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://53669D9303D62E2397D1EF3EF997D091.gr7.ap-south-1.eks.amazonaws.com') {
                    sh "kubectl apply -f manifest.yaml"
+                   sleep 60
+                }
+            }
+        }
+
+        stage('Verify Deployment'){
+            steps{
+                withKubeConfig(caCertificate: '', clusterName: 'demo-cluster', contextName: '', credentialsId: 'k8s-token', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://53669D9303D62E2397D1EF3EF997D091.gr7.ap-south-1.eks.amazonaws.com') {
+                   sh "kubectl get pods -n webapps"
+                   sh "kubectl get svc -n webapps"
                 }
             }
         }

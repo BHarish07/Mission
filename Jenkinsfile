@@ -81,8 +81,7 @@ pipeline{
                 script{
                     withDockerRegistry(credentialsId: 'docker-auth', toolName: 'docker') {
                          sh "docker push harishbalike/mission:latest "
-                         sh "docker run -d --name mission -p 8083:8080 harishbalike/mission:latest"
-                         
+                                                 
                      }
                     
                 }
@@ -109,5 +108,40 @@ pipeline{
 
 
     }
+
+    post{
+        always{
+            script{
+                def jobName = env.JOB_NAME 
+                def buildNumber = env.BUILD_NUMBER
+                def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
+                def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
+
+                def body = """
+                   <html>
+                   <body>
+                   <div style="border: 4px solid ${bannerColor}; padding: 10px;">
+                   <h2>${jobName} - Build $ ${buildNumber}</h2>
+                   <div style="background-color: ${bannerColor}; padding: 10px;">
+                   <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
+                   </div>
+                   <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+                   </div>
+                   </body>
+                   </html>
+                   """
+                   emailext(
+                    subject: "${jobName} - Bukd ${buildNumber} - ${pipelineStatus.toUpperCase()}",
+                    body:body,
+                    to: 'harishbalike1995@gmail.com',
+                    from: 'jenkins@example.com',
+                    replyTo: 'jenkins@example.com',
+                    mimeType: 'text/html',
+                    attachmentsPattern: 'trivy-image-report.html'
+                   )
+            }
+        }
+    }
+    
 
 } 

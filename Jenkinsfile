@@ -122,7 +122,7 @@ pipeline{
                    <html>
                    <body>
                    <div style="border: 4px solid ${bannerColor}; padding: 10px;">
-                   <h2>${jobName} - Build $ ${buildNumber}</h2>
+                   <h2>${jobName} - Build  ${buildNumber}</h2>
                    <div style="background-color: ${bannerColor}; padding: 10px;">
                    <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
                    </div>

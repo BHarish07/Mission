@@ -131,7 +131,7 @@ pipeline{
                    </html>
                    """
                    emailext(
-                    subject: "${jobName} - Bukd ${buildNumber} - ${pipelineStatus.toUpperCase()}",
+                    subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
                     body:body,
                     to: 'harishbalike1995@gmail.com',
                     from: 'jenkins@example.com',
